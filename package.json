@@ -1,0 +1,19 @@
+{
+  "name": "hackathon-search-service",
+  "version": "1.0.0",
+  "description": "A service for indexing an Elasticsearch instance with Health Cloud recipe data and executing search queries on it",
+  "main": "src/index.js",
+  "scripts": {
+    "start": "node src/index.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@elastic/elasticsearch": "^7.10.0",
+    "async": "^3.2.0",
+    "axios": "^0.21.1",
+    "config": "^3.3.3",
+    "express": "^4.17.1",
+    "uuid": "^8.3.2"
+  }
+}
