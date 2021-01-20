@@ -22,11 +22,12 @@ app.get('/', (req, res) => {
  */
 app.get('/search', async (req, res) => {
   try {
-    const esResponse = await queryElasticsearch(req.query);
-    res.status(200).json(esResponse.data);
+    const cardIds = await queryElasticsearch(req.query);
+    res.status(200).json(cardIds);
   } catch(error) {
-    console.log(error);
-    res.status(error.statusCode || 500).send(error.message);
+    if (/parameter/gi.test(error.message)) return res.status(400).send(error.message);
+    if (/no results found/gi.test(error.message)) return res.status(404).send(error.message);
+    res.status(500).send(error.message);
   }
 });
 
@@ -42,13 +43,18 @@ app.listen(port, () => {
 /**
  * Make a POST call to the Elasticsearch instance
  */
-const queryElasticsearch = async(query) => {
+const queryElasticsearch = async (query) => {
   const { baseUrl, indexName } = config.elasticsearch;
 
   const esUrl = `${baseUrl}/${indexName}/_search`;
   const queryObject = buildQueryObject(query);
 
-  return await axios.post(esUrl, queryObject);
+  const response = await axios.post(esUrl, queryObject);
+  const hits = response.data.hits.hits;
+
+  if (!hits || hits.length < 1) throw new Error('No results found')
+
+  return hits.map(hit => hit['_source'].cardId);
 }
 
 /**

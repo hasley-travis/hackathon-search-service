@@ -117,6 +117,9 @@ const getRecipesByCardId = async (recipeCardIds) => {
   return recipes;
 }
 
+/**
+ * Add all recipes into the Elasticsearch index
+ */
 const indexElasticsearch = async (recipes) => {
   const recipesSlim = recipes.map(trimRecipe);
 
@@ -125,6 +128,9 @@ const indexElasticsearch = async (recipes) => {
   });
 }
 
+/**
+ * Transform a recipe card into just the information useful for search
+ */
 const trimRecipe = (recipe) => {
   return {
     cardId: recipe.cardId,
@@ -140,12 +146,19 @@ const trimRecipe = (recipe) => {
   };
 }
 
+/**
+ * Remove non alphanumeric characters and clean up whitespace
+ */
 const cleanTextField = (text) => {
   return text
     .replace(/[^A-Za-z0-9]/g, ' ') // replace any non-alphanumeric character with a ' '
-    .replace(/\s+/g, ' '); // replace any number of consecutive whitespace characters with a ' '
+    .replace(/\s+/g, ' ') // replace any number of consecutive whitespace characters with a ' '
+    .trim();
 }
 
+/**
+ * Build request headers for calling the BFF
+ */
 const buildBffHeaders = () => {
   return {
     'x-hc-corid': uuid.v4(),
@@ -154,4 +167,5 @@ const buildBffHeaders = () => {
   };
 }
 
+// MAIN
 index();
