@@ -1,0 +1,66 @@
+openapi: 3.0.0
+info:
+  title: "hackathon-search-service"
+  version: 1.0.0
+  description: "A Node.js service that queries a local Elasticsearch instance"
+paths:
+  /:
+    get:
+      summary: Health Check
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: string
+                example: Hello World!
+  /search:
+    get:
+      summary: Returns search results from Elasticsearch as an array of card ids
+      parameters:
+        - name: q
+          description: The search query
+          in: query
+          required: true
+          schema:
+            type: string
+        - name: mealType
+          description: The meal type to filter search results on
+          in: query
+          required: false
+          schema:
+            type: string
+            enum: [breakfast, lunch, dinner, side, snack, dessert]
+        - name: offset
+          description: The offset for pagination
+          in: query
+          required: false
+          schema:
+            type: integer
+            minimum: 0
+            default: 0
+        - name: count
+          description: The maximum number of search results to return
+          in: query
+          required: false
+          schema:
+            type: integer
+            minimum: 1
+            default: 25
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
+                  example: 1166613, 1166787, 1142345, 1168493
+        400:
+          description: Bad Request
+        404:
+          description: Not Found
+        500:
+          description: Internal Server Error
