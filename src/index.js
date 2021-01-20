@@ -3,7 +3,7 @@ const config = require('config');
 const express = require('express');
 
 const app = express();
-const port = 3000;
+const { port } = config.express;
 
 /**
  * Health Check
@@ -99,7 +99,7 @@ const buildQueryObject = (query) => {
 const buildMealTypeFilter = (mealType) => {
   switch(mealType.toLowerCase().trim()) {
     case 'breakfast':
-      return [{ term: { isBreakFast: true } }];
+      return [{ term: { isBreakfast: true } }];
     case 'lunch':
       return [{ term: { isLunch: true } }];
     case 'dinner':
