@@ -25,6 +25,6 @@ module.exports = {
     baseUrl: 'http://localhost:9200',
   },
   express: {
-    port: 3000,
+    port: 8080,
   },
 };
